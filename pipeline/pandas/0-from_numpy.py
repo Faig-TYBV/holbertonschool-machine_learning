@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ Learning pandas """
-import pandas
+import pandas as pd
 
 
 def from_numpy(array):
