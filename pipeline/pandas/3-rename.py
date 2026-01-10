@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """renaming column"""
-import pandas
+import pandas as pd
 
 
 def rename(df):
