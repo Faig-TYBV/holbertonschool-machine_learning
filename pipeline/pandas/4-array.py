@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """ from dataframe to numpy array """
-import pandas as pd
 
 
 def array(df):
