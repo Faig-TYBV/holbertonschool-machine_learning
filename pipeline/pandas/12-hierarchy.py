@@ -21,10 +21,10 @@ def hierarchy(df1, df2):
     # Rearrange MultiIndex so Timestamp is the first level
     df = df.swaplevel(0, 1)
 
-    # Select timestamps from 1417411980 to 1417417980 (inclusive)
-    df = df.loc[1417411980:1417417980]
-
     # Ensure chronological order
     df = df.sort_index()
+
+    # Select timestamps from 1417411980 to 1417417980 (inclusive)
+    df = df.loc[1417411980:1417417980]
 
     return df
