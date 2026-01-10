@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import pandas as pd
 """ from dictionary to dataframe"""
+import pandas as pd
+
 
 df = pd.DataFrame(
         {
