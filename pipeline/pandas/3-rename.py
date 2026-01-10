@@ -8,4 +8,5 @@ def rename(df):
 
     df.rename(columns={"Timestamp": "Datetime"})
     df["Datetime"] = pd.to_datetime(df["Datetime"])
-    return df[["Datetime", "Close"]]
+    df[["Datetime", "Close"]]
+    return df
