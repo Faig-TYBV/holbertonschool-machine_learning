@@ -5,5 +5,4 @@
 def high(df):
     """Sorting according to High"""
 
-    return df.sort_values(by="High", ascending=False, inplace=True)
-    
+    return df.sort_values(by="High", ascending=False)
