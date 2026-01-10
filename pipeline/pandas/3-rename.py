@@ -6,7 +6,7 @@ import pandas as pd
 def rename(df):
     """Modifying our dataframe"""
 
-    df.rename(columns={"Timestamp": "Datetime"})
+    df = df.rename(columns={"Timestamp": "Datetime"})
     df["Datetime"] = pd.to_datetime(df["Datetime"], unit='s')
     df = df[["Datetime", "Close"]]
     return df
