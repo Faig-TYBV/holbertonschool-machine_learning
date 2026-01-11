@@ -2,6 +2,7 @@
 """Concatenate two DataFrames with a MultiIndex and select a time range."""
 import pandas as pd
 
+
 def hierarchy(df1, df2):
     """Concatenate two DataFrames with a MultiIndex and select a time range."""
 
