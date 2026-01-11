@@ -19,5 +19,3 @@ def change_scale():
   plt.xlim(0, 28650)
   plt.show()
 
-change_scale()
-
