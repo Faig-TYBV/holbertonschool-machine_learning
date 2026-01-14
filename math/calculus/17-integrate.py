@@ -17,4 +17,3 @@ def poly_integral(poly, C=0):
             integral.append(ele/i)
         i += 1
     return integral
-print(poly_integral([5, 3, 0, 1]))
