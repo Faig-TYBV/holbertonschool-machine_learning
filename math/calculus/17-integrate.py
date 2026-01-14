@@ -8,7 +8,7 @@ def poly_integral(poly, C=0):
     if not isinstance(poly, list) or not isinstance(C, int):
         return None
     integral = []
-    integral.append(0)
+    integral.append(C)
     i = 1
     for ele in poly:
         if ele%i == 0:
