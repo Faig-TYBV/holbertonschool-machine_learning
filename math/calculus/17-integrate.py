@@ -16,4 +16,6 @@ def poly_integral(poly, C=0):
         else:
             integral.append(ele/i)
         i += 1
+    while len(integral) > 1 and integral[-1] == 0:
+        integral.pop()
     return integral
