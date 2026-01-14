@@ -5,13 +5,13 @@
 def poly_integral(poly, C=0):
     """Finding integral"""
 
-    if not isinstance(poly, list) or not isinstance(C, int):
+    if not isinstance(poly, list) or not isinstance(C, int) or len(poly) == 0:
         return None
     integral = []
     integral.append(C)
     i = 1
     for ele in poly:
-        if ele%i == 0:
+        if ele % i == 0:
             integral.append(ele//i)
         else:
             integral.append(ele/i)
