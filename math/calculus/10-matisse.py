@@ -5,6 +5,8 @@
 def poly_derivative(poly):
     """Coefficients of the derivative of the polynomial"""
 
+    if not isinstance(poly, list):
+        return None
     dev = []
     i = 0
     for ele in poly:
