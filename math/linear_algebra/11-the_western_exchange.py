@@ -5,5 +5,5 @@
 def np_transpose(matrix):
     '''finding transpose of the matrix'''
 
-    transposed = matrix.transpose
+    transposed = matrix.transpose()
     return transposed
