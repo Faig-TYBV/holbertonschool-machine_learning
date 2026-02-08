@@ -1,56 +1,56 @@
 #!/usr/bin/env python3
-'''
-Docstring for holbertonschool-machine_learning.math.advanced_linear_algebra.1-minor
-'''
+"""Now we will try to get the minors on matrix"""
 
 
 def determinant(matrix):
-  '''Calculates the determinant of a matrix:'''
+    """We will find the determinant, taking into conseideration
+    some exceptions"""
+    if isinstance(matrix, list) is False:
+        raise TypeError('matrix must be a list of lists')
+    if matrix == [[]]:
+        return 1
+    for i in range(len(matrix)):
+        if isinstance(matrix[i], list) is False:
+            raise TypeError('matrix must be a list of lists')
+        if len(matrix) != len(matrix[i]):
+            raise ValueError('matrix must be a square matrix')
+    if len(matrix) == 1 and len(matrix[0]) == 1:
+        return matrix[0][0]
+    if len(matrix) == 2 and len(matrix[0]) == len(matrix[1]) == 2:
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+    cnt = 0
+    for j in range(len(matrix)):
+        minor = []
+        for row in matrix[1:]:
+            minor.append(row[:j] + row[j+1:])
+        cnt += matrix[0][j] * (-1) ** j * determinant(minor)
+    return cnt
 
-  # 1. Validation: Check if matrix is a list of lists
-  if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
-      raise TypeError("matrix must be a list of lists")
-  # 2. Handle the 0x0 case [[]] or []
-  if matrix == [] or matrix == [[]]:
-      return 1
-  n = len(matrix)
-  # 3. Validation: Check if matrix is square
-  for row in matrix:
-      if len(row) != n:
-          raise ValueError("matrix must be a square matrix")
-  n = len(matrix)
-  if n == 1:
-      return matrix[0][0]
-  if n == 2:
-      return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
-  det = 0
-  for j in range(n):
-      minor = [row[:j] + row[j+1:] for row in matrix[1:]]
-      sign = (-1) ** j
-      det += sign * matrix[0][j] * determinant(minor)
-  return det
 
-def minor(matrix):    
-  '''Calculates the minor matrix of a matrix:'''
-
-  # 1. Validation: Check if matrix is a list of lists
-  if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
-      raise TypeError("matrix must be a list of lists")
-  # 2. Handle the 0x0 case [[]] or []
-  if matrix == [] or matrix == [[]]:
-      return 1
-  n = len(matrix)
-  # 3. Validation: Check if matrix is square
-  for row in matrix:
-      if len(row) != n:
-          raise ValueError("matrix must be a square matrix")
-  # 4. Calculate the minor matrix
-  minor_matrix = []
-  for i in range(n):
-      minor_row = []
-      for j in range(n):
-          # Create the minor by removing row i and column j
-          minor = [row[:j] + row[j+1:] for k, row in enumerate(matrix) if k != i]
-          minor_row.append(determinant(minor))
-      minor_matrix.append(minor_row)
-  return minor_matrix
+def minor(matrix):
+    """Just like before but this time minor"""
+    if isinstance(matrix, list) is False:
+        raise TypeError('matrix must be a list of lists')
+    if matrix == [[]]:
+        raise ValueError('matrix must be a non-empty square matrix')
+    for i in range(len(matrix)):
+        if isinstance(matrix[i], list) is False:
+            raise TypeError('matrix must be a list of lists')
+        if len(matrix) != len(matrix[i]):
+            raise ValueError('matrix must be a non-empty square matrix')
+    if len(matrix) == 1 and len(matrix[0]) == 1:
+        return [[1]]
+    if len(matrix) == 2 and len(matrix[0]) == len(matrix[1]) == 2:
+        return [[matrix[1][1], matrix[1][0]], [matrix[0][1], matrix[0][0]]]
+    cnt = []
+    for i in range(len(matrix)):
+        minor1 = []
+        for j in range(len(matrix)):
+            sub = []
+            for r in range(len(matrix)):
+                if r == i:
+                    continue
+                sub.append(matrix[r][:j] + matrix[r][j+1:])
+            minor1.append(determinant(sub))
+        cnt.append(minor1)
+    return cnt
