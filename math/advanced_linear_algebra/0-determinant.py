@@ -9,8 +9,9 @@ def determinant(matrix):
     '''Calculates the determinant of a matrix:'''
 
     # 1. Validation: Check if matrix is a list of lists
-    if not isinstance(matrix, list) or
-    not all(isinstance(row, list) for row in matrix):
+    if not isinstance(matrix, list):
+        raise TypeError("matrix must be a list of lists")
+    if not all(isinstance(row, list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
     # 2. Handle the 0x0 case [[]] or []
     if matrix == [] or matrix == [[]]:
