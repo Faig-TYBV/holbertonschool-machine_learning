@@ -28,6 +28,7 @@ def determinant(matrix):
         det += sign * matrix[0][j] * determinant(minor)
     return det
 
+
 def cofactor(matrix):
     '''
     Calculates the cofactor matrix of a matrix:
@@ -49,7 +50,7 @@ def cofactor(matrix):
         return [[matrix[1][1], -matrix[1][0]], [-matrix[0][1], matrix[0][0]]]
     cofactor_matrix = []
     for i in range(n):
-        cofactor_row = [] 
+        cofactor_row = []
         for j in range(n):
             minor = []
             for r in range(n):
