@@ -31,5 +31,5 @@ def determinant(matrix):
         minor = [row[:j] + row[j+1:] for row in matrix[1:]]
         # Sign alternates: +, -, +, - ...
         sign = (-1) ** j
-        det += sign * matrix[0][j] * determinant(minor) 
+        det += sign * matrix[0][j] * determinant(minor)
     return det
