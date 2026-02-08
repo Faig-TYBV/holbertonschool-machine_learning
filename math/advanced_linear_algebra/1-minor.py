@@ -7,6 +7,7 @@ Docstring for holbertonschool-machine_learning.math.advanced_linear_algebra.1-mi
 def determinant(matrix):
     '''Calculates the determinant of a matrix:'''
 
+    n = len(matrix)
     if n == 1:
         return matrix[0][0]
     if n == 2:
