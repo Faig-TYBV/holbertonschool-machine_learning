@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''time to get the cofactor'''
+'''time to get the adjugate'''
 
 
 def determinant(matrix):
@@ -60,3 +60,31 @@ def cofactor(matrix):
             cofactor_row.append(sign * determinant(minor))
         cofactor_matrix.append(cofactor_row)
     return cofactor_matrix
+
+def adjugate(matrix):
+    '''
+    Calculates the adjugate matrix of a matrix:
+    '''
+
+    if not isinstance(matrix, list):
+        raise TypeError("matrix must be a list of lists")
+    for row in matrix:
+        if not isinstance(row, list):
+            raise TypeError("matrix must be a list of lists")
+        if len(row) != len(matrix) or len(matrix) == 0:
+            raise ValueError("matrix must be a non-empty square matrix")
+    if matrix == [[]]:
+        raise ValueError("matrix must be a non-empty square matrix")
+    n = len(matrix)
+    if n == 1:
+        return [[1]]
+    if n == 2:
+        return [[matrix[1][1], -matrix[0][1]], [-matrix[1][0], matrix[0][0]]]
+    cofactor_matrix = cofactor(matrix)
+    adjugate_matrix = []
+    for j in range(n):
+        adjugate_row = []
+        for i in range(n):
+            adjugate_row.append(cofactor_matrix[i][j])
+        adjugate_matrix.append(adjugate_row)
+    return adjugate_matrix
