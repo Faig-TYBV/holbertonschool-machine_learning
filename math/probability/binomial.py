@@ -65,9 +65,9 @@ class Binomial:
         """
         k = int(k)
         if k < 0:
-            return 0.0
+            return 0
         if k >= self.n:
-            return 1.0
+            return 1
 
         probability = 0
         for i in range(k + 1):
