@@ -32,8 +32,9 @@ class Binomial:
       p_initial = 1 - (variance / mean)
       self.n = int(round(mean / p_initial))
       self.p = float(mean / self.n)
+      if not (0 < self.p < 1):
+        raise ValueError("p must be greater than 0 and less than 1")
 
-      
 
   
 
