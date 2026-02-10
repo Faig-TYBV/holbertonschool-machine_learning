@@ -54,6 +54,21 @@ class Binomial:
     nmk_factorial = factorial(self.n - k)       
     n_choose_k = n_factorial / (k_factorial * nmk_factorial)
     return n_choose_k * (self.p ** k) * ((1 - self.p) ** (self.n - k))
+  
+  def cdf(self, k):
+    '''
+    Calculates the value of the CDF for a given number of "successes"
+    '''
+
+    k = int(k)
+    if k < 0:
+      return 0
+    if k >= self.n:
+      return 1  
+    probability = 0
+    for i in range(k + 1):
+        probability += self.pmf(i)   
+    return probability
 
 
   
