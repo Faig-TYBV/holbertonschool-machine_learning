@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+#!/usr/bin/env python3
 '''
 Docstring for holbertonschool-machine_learning.probability.poisson
 '''
