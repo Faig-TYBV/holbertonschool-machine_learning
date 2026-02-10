@@ -38,8 +38,8 @@ class Poisson:
       k = int(k)
     e = 2.7182818285
     E = 1
-    for i in range(100000):
-        E *= (1 - self.lambtha / 100000)
+    for i in range(1000000):
+        E *= (1 - self.lambtha / 1000000)
     K = 1.0
     L = 1.0
     for i in range(1, k+1):
