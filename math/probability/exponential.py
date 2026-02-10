@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Docstring for holbertonschool-machine_learning.probability.poisson
+Docstring for holbertonschool-machine_learning.probability.exponential
 '''
 
 
@@ -37,7 +37,7 @@ class Exponential:
     
   def cdf(self, x):
     '''Calculating cdf'''
-    
+
     if x < 0:
       return 0
     e = 2.7182818285
