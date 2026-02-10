@@ -37,8 +37,8 @@ class Poisson:
     if not isinstance(k, int):
       k = int(k)
     e = 2.7182818285
-    term = 1
-    result = 1
+    term = 1.0
+    result = 1.0
     for n in range(1, 1000000):
         term *= -self.lambtha / n
         result += term
