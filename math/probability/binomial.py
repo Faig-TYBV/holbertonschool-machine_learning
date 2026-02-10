@@ -4,7 +4,7 @@ Docstring for holbertonschool-machine_learning.probability.binomial
 '''
 
 
-class Normal:
+class Binomial:
   '''
   Binomial class
   '''
