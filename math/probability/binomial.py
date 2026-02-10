@@ -42,7 +42,7 @@ class Binomial:
 
     k = int(k)
     if k < 0 or k > self.n:
-        return 0.0
+        return 0
     def factorial(num):
       '''Helper to calculate factorial'''
       res = 1
