@@ -43,12 +43,22 @@ class Normal:
     '''
     Calculates the value of the PDF for a given x-value
     '''
-    
+
     pi = 3.1415926536
     e = 2.7182818285
     exponent = -0.5 * (self.z_score(x) ** 2)
     coefficient = 1 / (self.stddev * (2 * pi) ** 0.5)
     return coefficient * (e ** exponent)
+  def cdf(self, x):
+    '''calculating cdf'''
+
+    pi = 3.1415926536
+    e = 2.7182818285
+    z = self.z_score(x)
+    X = z / (2 ** 0.5)
+    erf = 2 / pi * (X - X * X * X /3 +  X ** 5 / 10 - X ** 7 / 42 + X ** 9 / 216)
+    return float(0.5 * (1 + erf))
+
       
 
   
