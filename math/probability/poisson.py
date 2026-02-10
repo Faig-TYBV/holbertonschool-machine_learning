@@ -44,5 +44,17 @@ class Poisson:
       K *= i
       L *= self.lambtha
     return result * L / K
+  
+  def cdf(self, k):
+    """calculating cdf"""
+
+    if not isinstance(k, int):
+      k = int(k)
+    if k < 0:
+      return 0
+    cnt = 0
+    for i in range(k + 1):
+      cnt += self.pmf(i)
+    return cnt
 
 
