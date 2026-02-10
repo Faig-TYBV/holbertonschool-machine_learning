@@ -17,9 +17,9 @@ class Binomial:
     if data is None:
       if n <= 0:
         raise ValueError("n must be a positive value")
-      if p < 0 or p >= 1:
+      if p <= 0 or p >= 1:
         raise ValueError("p must be greater than 0 and less than 1")
-      self.n = n
+      self.n = round(n)
       self.p = float(p)
     else:
       if not isinstance(data, list):
