@@ -28,6 +28,16 @@ class Normal:
       sum_diff_sq = sum((x-self.mean)**2 for x in data)
       variance = sum_diff_sq / len(data)
       self.stddev = float(variance**0.5)
+
+  def z_score(self, x):
+    '''calculating z-score'''
+
+    return (x - self.mean) / self.stddev
+  
+  def x_value(self, z):
+    '''calculating x-value'''
+
+    return z * self.stddev + self.mean
       
 
   
