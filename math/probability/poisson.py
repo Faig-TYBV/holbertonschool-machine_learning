@@ -39,7 +39,7 @@ class Poisson:
     e = 2.7182818285
     term = 1
     result = 1
-    for n in range(1, 100):
+    for n in range(1, 1000):
         term *= -self.lambtha / n
         result += term
     K = 1.0
