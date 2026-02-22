@@ -1,4 +1,4 @@
-1. A,B
-2. B,D
-3. C,E
-4. F
+A,B,C,D,E
+A,B,D
+B,C,E
+F
