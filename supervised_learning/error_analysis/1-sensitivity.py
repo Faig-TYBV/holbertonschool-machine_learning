@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-"""
-Sensitivity (Recall) Calculation
-
-This module contains a function to compute the sensitivity for each class
-from a confusion matrix.
-"""
-
 import numpy as np
 
 
