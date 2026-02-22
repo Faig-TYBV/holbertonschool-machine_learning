@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""
-Precision Calculation
-
-This module contains a function to compute the precision for each class
-from a confusion matrix.
-"""
-
+"""Precision Calculation"""
 import numpy as np
 
 
