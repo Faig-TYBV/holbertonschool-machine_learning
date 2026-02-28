@@ -21,7 +21,7 @@ class Node:
         self.sub_population = None
         self.depth = depth
 
-    def max_depth_below(self) :
+    def max_depth_below(self):
         '''finding max depth'''
 
         return max(self.left_child.max_depth_below(), self.right_child.max_depth_below())

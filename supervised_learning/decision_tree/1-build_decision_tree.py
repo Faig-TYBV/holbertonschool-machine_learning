@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""
-Module for building a Decision Tree.
-Contains the Node, Leaf, and Decision_Tree classes.
-"""
+'''Adding max_depth_below'''
+
+
 import numpy as np
+'''Importing numpy library'''
 
 
 class Node:
-    """
-    Represents an internal node in a decision tree.
-    """
+    '''Node class'''
+
     def __init__(self, feature=None, threshold=None, left_child=None, right_child=None, is_root=False, depth=0):
+        '''initializing fields'''
+
         self.feature = feature
         self.threshold = threshold
         self.left_child = left_child
@@ -21,55 +22,50 @@ class Node:
         self.depth = depth
 
     def max_depth_below(self):
-        """Calculates the maximum depth of the tree below the current node."""
-        max_d = self.depth
-        if self.left_child:
-            max_d = max(max_d, self.left_child.max_depth_below())
-        if self.right_child:
-            max_d = max(max_d, self.right_child.max_depth_below())
-        return max_d
+        '''finding max depth'''
 
+        return max(self.left_child.max_depth_below(), self.right_child.max_depth_below())
+    
+    def count_nodes(self, only_leaves=False):
+        '''counting nodes'''
+
+        return self.root.count_nodes_below(only_leaves=only_leaves)
+    
     def count_nodes_below(self, only_leaves=False):
-        """
-        Recursively counts the number of nodes (or just leaves) below this node.
-        """
-        # If we only want leaves, this internal node doesn't count as 1.
-        count = 0 if only_leaves else 1
-        
-        if self.left_child:
-            count += self.left_child.count_nodes_below(only_leaves=only_leaves)
-        if self.right_child:
-            count += self.right_child.count_nodes_below(only_leaves=only_leaves)
-            
-        return count
+        '''counting nodes below'''
 
+        if only_leaves:
+            return self.left_child.count_nodes_below(only_leaves) + self.right_child.count_nodes_below(only_leaves)
+        else:
+            return 1 + self.left_child.count_nodes_below(only_leaves) + self.right_child.count_nodes_below(only_leaves)
 
 class Leaf(Node):
-    """
-    Represents a leaf node in a decision tree.
-    """
+    '''Leaf class extending Node class'''
+
     def __init__(self, value, depth=None):
+        '''initializing fields'''
+
         super().__init__()
         self.value = value
         self.is_leaf = True
         self.depth = depth
 
-    def max_depth_below(self):
-        """Returns the depth of the leaf node."""
-        return self.depth
+    def max_depth_below(self) :
+        '''returning depth'''
 
-    def count_nodes_below(self, only_leaves=False):
-        """
-        A leaf always counts as 1 node, whether we are counting all nodes or just leaves.
-        """
+        return self.depth
+    
+    def count_nodes_below(self, only_leaves=False) :
+        '''counting nodes'''
+
         return 1
 
-
 class Decision_Tree():
-    """
-    Represents a decision tree model.
-    """
+    '''Decision Tree class'''
+
     def __init__(self, max_depth=10, min_pop=1, seed=0, split_criterion="random", root=None):
+        '''initializing fields'''
+
         self.rng = np.random.default_rng(seed)
         if root:
             self.root = root
@@ -82,12 +78,7 @@ class Decision_Tree():
         self.split_criterion = split_criterion
         self.predict = None
 
-    def depth(self):
-        """Calculates the maximum depth of the entire decision tree."""
-        return self.root.max_depth_below()
+    def depth(self) :
+        '''finding depth'''
 
-    def count_nodes(self, only_leaves=False):
-        """
-        Counts the total number of nodes or leaves in the tree.
-        """
-        return self.root.count_nodes_below(only_leaves=only_leaves)
+        return self.root.max_depth_below()
