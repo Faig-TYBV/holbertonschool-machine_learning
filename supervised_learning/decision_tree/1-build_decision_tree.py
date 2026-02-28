@@ -26,11 +26,6 @@ class Node:
 
         return max(self.left_child.max_depth_below(), self.right_child.max_depth_below())
     
-    def count_nodes(self, only_leaves=False):
-        '''counting nodes'''
-
-        return self.root.count_nodes_below(only_leaves=only_leaves)
-    
     def count_nodes_below(self, only_leaves=False):
         '''counting nodes below'''
 
@@ -82,3 +77,8 @@ class Decision_Tree():
         '''finding depth'''
 
         return self.root.max_depth_below()
+    
+    def count_nodes(self, only_leaves=False):
+        '''counting nodes'''
+
+        return self.root.count_nodes_below(only_leaves=only_leaves)
