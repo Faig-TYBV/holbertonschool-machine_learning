@@ -90,7 +90,7 @@ class Leaf(Node):
     def __str__(self):
         '''leaf node in a printable format'''
     
-        return (f"-> leaf [value={self.value}]")
+        return (f"-> leaf [value={self.value}]\n")
 
 class Decision_Tree():
     '''Decision Tree class'''
