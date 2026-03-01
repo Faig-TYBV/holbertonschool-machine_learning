@@ -75,6 +75,8 @@ class Node:
         return res
     
     def update_bounds_below(self) :
+        '''updating nodes below'''
+
         if self.is_root : 
             self.upper = { 0:np.inf }
             self.lower = {0 : -1*np.inf }
