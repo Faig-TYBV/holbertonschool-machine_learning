@@ -33,6 +33,38 @@ class Node:
             return self.left_child.count_nodes_below(only_leaves) + self.right_child.count_nodes_below(only_leaves)
         else:
             return 1 + self.left_child.count_nodes_below(only_leaves) + self.right_child.count_nodes_below(only_leaves)
+        
+    def __str__(self) :
+        '''nodes in a printable format'''
+        
+        self_line = ""
+        if self.is_root:
+            self_line = "root [feature="+self.feature+", threshold="+self.threshold+"]"
+        else:
+            self_line = "node [feature="+self.feature+", threshold="+self.threshold+"]"
+        left_text = self.left_child.__str__()
+        right_text = self.right_child.__str__()
+        left_text = self.left_child_add_prefix(left_text)
+        right_text = self.right_child_add_prefix(right_text)
+        return self_line + "\n" + left_text + right_text
+        
+    def left_child_add_prefix(self,text):
+            '''left part of the node'''
+
+            lines=text.split("\n")
+            new_text="    +--"+lines[0]+"\n"
+            for x in lines[1:] :
+                new_text+=("    |  "+x)+"\n"
+            return (new_text)
+    
+    def right_child_add_prefix(self, text):
+            '''right part of the node'''
+
+            lines=text.split("\n")
+            new_text="    +--"+lines[0]+"\n"
+            for x in lines[1:] :
+                new_text+=("       "+x)+"\n"
+            return (new_text)
 
 class Leaf(Node):
     '''Leaf class extending Node class'''
@@ -54,6 +86,11 @@ class Leaf(Node):
         '''counting nodes'''
 
         return 1
+    
+    def __str__(self):
+        '''leaf node in a printable format'''
+    
+        return (f"-> leaf [value={self.value}]")
 
 class Decision_Tree():
     '''Decision Tree class'''
@@ -82,3 +119,8 @@ class Decision_Tree():
         '''counting nodes'''
 
         return self.root.count_nodes_below(only_leaves=only_leaves)
+    
+    def __str__(self):
+        '''decision tree in printable format'''
+        
+        return self.root.__str__()
