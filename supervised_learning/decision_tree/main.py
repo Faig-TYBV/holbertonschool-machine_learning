@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-Node = __import__('2-build_decision_tree').Node
-Leaf = __import__('2-build_decision_tree').Leaf
-Decision_Tree = __import__('2-build_decision_tree').Decision_Tree
+Node = __import__('3-build_decision_tree').Node
+Leaf = __import__('3-build_decision_tree').Leaf
+Decision_Tree = __import__('3-build_decision_tree').Decision_Tree
 
 def example_0():
     leaf0 = Leaf(0, depth=1)
@@ -32,7 +32,12 @@ def example_1(depth):
     root.is_root = True
     return Decision_Tree(root=root)
 
-#Print Tree example 0
-print(example_0())
-#Print Tree example 1
-print(example_1(4))
+print('## Tree 1')
+T=example_0() 
+for leaf in T.get_leaves() :
+    print(leaf)
+
+print('## Tree 2')
+T=example_1(3) 
+for leaf in T.get_leaves() :
+    print(leaf)

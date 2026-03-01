@@ -65,6 +65,13 @@ class Node:
             for x in lines[1:-1] :
                 new_text+=("       "+x)+"\n"
             return (new_text)
+    
+    def get_leaves_below(self):
+        '''returning leaves locating below'''
+
+        left_child_leaves = self.left_child.get_leaves_below()
+        right_child_leaves = self.right_child.get_leaves_below()
+        res = left_child_leaves + right_child_leaves
 
 class Leaf(Node):
     '''Leaf class extending Node class'''
@@ -91,6 +98,11 @@ class Leaf(Node):
         '''leaf node in a printable format'''
     
         return (f"-> leaf [value={self.value}]")
+    
+    def get_leaves_below(self) :
+        """returning the leaf"""
+    
+        return [self]
 
 class Decision_Tree():
     '''Decision Tree class'''
@@ -124,3 +136,8 @@ class Decision_Tree():
         '''decision tree in printable format'''
         
         return self.root.__str__()
+    
+    def get_leaves(self) :
+        """returning the leaves locating below"""
+    
+        return self.root.get_leaves_below()
