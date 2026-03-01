@@ -41,7 +41,7 @@ class Node:
         if self.is_root:
             self_line = f"root [feature={self.feature}, threshold={self.threshold}]"
         else:
-            self_line = f"node [feature={self.feature}, threshold={self.threshold}]"
+            self_line = f"-> node [feature={self.feature}, threshold={self.threshold}]"
         left_text = self.left_child.__str__()
         right_text = self.right_child.__str__()
         left_text = self.left_child_add_prefix(left_text)
