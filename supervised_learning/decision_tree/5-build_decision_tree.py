@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Task 2: 2. Let's print our Tree"""
+""" Task 5: 5. Towards the predict function (3): the update_indicator method"""
 import numpy as np
 
 
@@ -169,6 +169,89 @@ class Node:
         return f"{Type}[feature={self.feature}, threshold=\
 {self.threshold}]\n{left_str}{right_str}".rstrip()
 
+    def get_leaves_below(self):
+        """
+        Returns a list of all leaves below this node.
+
+        Returns:
+        list
+            The list of all leaves below this node.
+        """
+        if self.is_leaf:
+            return [self]
+        leaves = []
+        if self.left_child:
+            leaves.extend(self.left_child.get_leaves_below())
+        if self.right_child:
+            leaves.extend(self.right_child.get_leaves_below())
+        return leaves
+
+    def update_bounds_below(self):
+        """
+        Update the bounds for the current node and propagate the
+        bounds to its children.
+        """
+        if self.is_root:
+            self.lower = {0: -np.inf}
+            self.upper = {0: np.inf}
+
+        for child in [self.left_child, self.right_child]:
+            if child:
+                child.lower = self.lower.copy()
+                child.upper = self.upper.copy()
+                if child == self.left_child:
+                    child.lower[self.feature] = self.threshold
+                else:
+                    child.upper[self.feature] = self.threshold
+
+        for child in [self.left_child, self.right_child]:
+            if child:
+                child.update_bounds_below()
+
+    def update_indicator(self):
+        """
+        Compute the indicator function for the current
+        node based on the lower and upper bounds.
+        """
+
+        def is_large_enough(x):
+            """
+            Check if each individual has all its features
+            greater than the lower bounds.
+
+            Parameters:
+            x : np.ndarray
+                A 2D NumPy array of shape (n_individuals, n_features).
+
+            Returns:
+
+            np.ndarray
+                A 1D NumPy array of boolean values
+                indicating if each individual meets the condition.
+            """
+            return np.all(np.array([x[:, key] > self.lower[key]
+                                    for key in self.lower.keys()]), axis=0)
+
+        def is_small_enough(x):
+            """
+            Check if each individual has all its features
+            less than or equal to the upper bounds.
+
+            Parameters:
+            x : np.ndarray
+                A 2D NumPy array of shape (n_individuals, n_features).
+
+            Returns:
+            np.ndarray
+                A 1D NumPy array of boolean values indicating
+                if each individual meets the condition.
+            """
+            return np.all(np.array([x[:, key] <= self.upper[key]
+                                    for key in self.upper.keys()]), axis=0)
+
+        self.indicator = lambda x: \
+            np.all(np.array([is_large_enough(x), is_small_enough(x)]), axis=0)
+
 
 class Leaf(Node):
     """
@@ -233,6 +316,24 @@ class Leaf(Node):
             The string representation of the leaf node.
         """
         return (f"-> leaf [value={self.value}]")
+
+    def get_leaves_below(self):
+        """
+        Returns a list of all leaves below this leaf.
+
+        Returns:
+        list
+            The list of all leaves below this leaf.
+        """
+        return [self]
+
+    def update_bounds_below(self):
+        """
+        Placeholder function for updating the
+        bounds for the current node and propagating the bounds
+        to its children.
+        """
+        pass
 
 
 class Decision_Tree():
@@ -324,3 +425,20 @@ class Decision_Tree():
             The string representation of the decision tree.
         """
         return self.root.__str__() + "\n"
+
+    def get_leaves(self):
+        """
+        Returns a list of all leaves in the tree.
+
+        Returns:
+        list
+            The list of all leaves in the tree.
+        """
+        return self.root.get_leaves_below()
+
+    def update_bounds(self):
+        """
+        Update the bounds for the entire
+        tree starting from the root node.
+        """
+        self.root.update_bounds_below()
