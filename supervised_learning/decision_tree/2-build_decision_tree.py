@@ -52,18 +52,18 @@ class Node:
             '''left part of the node'''
 
             lines=text.split("\n")
-            new_text="    +--"+lines[0]
+            new_text="    +--"+lines[0]+"\n"
             for x in lines[1:] :
-                new_text+=("\n    |  "+x)
+                new_text+=("    |  "+x)+"\n"
             return (new_text)
     
     def right_child_add_prefix(self, text):
             '''right part of the node'''
 
             lines=text.split("\n")
-            new_text="    +--"+lines[0]
+            new_text="    +--"+lines[0]+"\n"
             for x in lines[1:] :
-                new_text+=("\n       "+x)
+                new_text+=("       "+x)+"\n"
             return (new_text)
 
 class Leaf(Node):
@@ -90,7 +90,7 @@ class Leaf(Node):
     def __str__(self):
         '''leaf node in a printable format'''
     
-        return (f"-> leaf [value={self.value}]\n")
+        return (f"-> leaf [value={self.value}]")
 
 class Decision_Tree():
     '''Decision Tree class'''
