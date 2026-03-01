@@ -52,18 +52,18 @@ class Node:
             '''left part of the node'''
 
             lines=text.split("\n")
-            new_text="    +--"+lines[0]+"\n"
+            new_text="    +--"+lines[0]
             for x in lines[1:] :
-                new_text+=("    |  "+x)+"\n"
+                new_text+=("\n    |  "+x)
             return (new_text)
     
     def right_child_add_prefix(self, text):
             '''right part of the node'''
 
             lines=text.split("\n")
-            new_text="    +--"+lines[0]+"\n"
+            new_text="    +--"+lines[0]
             for x in lines[1:] :
-                new_text+=("       "+x)+"\n"
+                new_text+=("\n       "+x)
             return (new_text)
 
 class Leaf(Node):
