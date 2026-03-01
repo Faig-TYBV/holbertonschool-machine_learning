@@ -85,9 +85,9 @@ class Node:
             child.lower = self.lower.copy()
 
         # Left child: feature <= threshold → tighten upper bound
-        self.left_child.upper[self.feature] = self.threshold
+        self.left_child.lower[self.feature] = self.threshold
         # Right child: feature > threshold → tighten lower bound
-        self.right_child.lower[self.feature] = self.threshold
+        self.right_child.upper[self.feature] = self.threshold
         for child in [self.left_child, self.right_child] :
             child.update_bounds_below()
 
