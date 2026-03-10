@@ -79,4 +79,3 @@ class DeepNeuralNetwork:
         A, cache = self.forward_prop(X)
         cost = self.cost(Y, A)
         return np.where(A >= 0.5, 1, 0), cost
-
