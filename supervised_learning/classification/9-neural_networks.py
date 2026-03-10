@@ -37,6 +37,7 @@ class NeuralNetwork:
         '''b1 getter method'''
 
         return self.__b1
+
     @property
     def A1(self):
         '''A1 getter method'''
@@ -54,10 +55,9 @@ class NeuralNetwork:
         '''b2 getter method'''
 
         return self.__b2
-    
+
     @property
     def A2(self):
         '''A2 getter method'''
 
         return self.__A2
-
