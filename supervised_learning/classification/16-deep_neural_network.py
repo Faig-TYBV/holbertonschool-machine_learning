@@ -21,6 +21,7 @@ class DeepNeuralNetwork:
             raise ValueError("layers must be a list of positive integers")
         self.L = len(layers)
         self.cache = {}
+        self.weights = {}
         '''He et al. initialization'''
         for i in range(self.L):
             if i == 0:
