@@ -84,11 +84,12 @@ class DeepNeuralNetwork:
         '''Calculates one pass of gradient descent on the neural network'''
 
         m = Y.shape[1]
-        weights_copy = self.__weights.copy()
+        weights_copy = {}
+        for k, v in self.__weights.items():
+            weights_copy[k] = v.copy()
         for i in range(self.L, 0, -1):
             A = cache['A' + str(i)]
             A_prev = cache['A' + str(i - 1)]
-            W = weights_copy['W' + str(i)]
             if i == self.L:
                 dZ = A - Y
             else:
