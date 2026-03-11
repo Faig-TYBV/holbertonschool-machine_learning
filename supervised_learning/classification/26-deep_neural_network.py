@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """Deep Neural Network class"""
 
-
-from copyreg import pickle
-
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
