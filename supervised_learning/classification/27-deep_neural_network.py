@@ -83,12 +83,12 @@ class DeepNeuralNetwork:
         '''
 
         m = Y.shape[1]
-        cost = -(1 / m) * np.sum(Y * np.log(A + 1e-7))
+        cost = -(1 / m) * np.sum(Y * np.log(A))
         return cost
 
     def evaluate(self, X, Y):
         '''Evaluates the neural network's predictions for multiclass
-                        classification.
+        classification.
         Returns a one-hot numpy.ndarray of predictions and the cost.
         '''
 
