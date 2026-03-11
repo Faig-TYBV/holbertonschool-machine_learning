@@ -3,6 +3,9 @@
 
 
 import numpy as np
+import matplotlib.pyplot as plt
+
+from asyncio import graph
 
 
 class DeepNeuralNetwork:
@@ -22,7 +25,6 @@ class DeepNeuralNetwork:
         self.__L = len(layers)
         self.__cache = {}
         self.__weights = {}
-        '''He et al. initialization'''
         for i in range(self.L):
             if i == 0:
                 vector = np.random.normal(0, 1, (layers[i], nx))
@@ -74,7 +76,7 @@ class DeepNeuralNetwork:
         return cost
 
     def evaluate(self, X, Y):
-        '''Evaluates the neural network’s predictions'''
+        '''Evaluates the neural network's predictions'''
 
         A, cache = self.forward_prop(X)
         cost = self.cost(Y, A)
@@ -84,18 +86,17 @@ class DeepNeuralNetwork:
         '''Calculates one pass of gradient descent on the neural network'''
 
         m = Y.shape[1]
-        weights_copy = {}
-        for k, v in self.__weights.items():
-            weights_copy[k] = v.copy()
+        W_next = None
         for i in range(self.L, 0, -1):
             A = cache['A' + str(i)]
             A_prev = cache['A' + str(i - 1)]
             if i == self.L:
                 dZ = A - Y
             else:
-                dZ = np.matmul(weights_copy['W' + str(i + 1)].T, dZ)
+                dZ = np.matmul(W_next.T, dZ)
                 dZ *= (A * (1 - A))
             dW = np.matmul(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
+            W_next = self.__weights['W' + str(i)].copy()
             self.__weights['W' + str(i)] -= alpha * dW
             self.__weights['b' + str(i)] -= alpha * db
