@@ -7,14 +7,14 @@ import tensorflow as tf
 
 
 def create_momentum_op(alpha, beta1):
-    """Creates the training operation for a gradient descent with
-        momentum optimization algorithm in tensorflow."""
+    """
+    Sets up the Gradient Descent with Momentum optimization algorithm.
+    Args:
+        alpha: The learning rate.
+        beta1: The momentum weight.
+    Returns:
+        The optimizer object.
+    """
 
-    v = tf.placeholder(tf.float32, name='v')
-    grad = tf.placeholder(tf.float32, name='grad')
-    var = tf.placeholder(tf.float32, name='var')
-
-    momentum = beta1 * v + (1 - beta1) * grad
-    train_op = var - alpha * momentum
-
-    return train_op, v, grad, var
+    optimizer = tf.keras.optimizers.SGD(learning_rate=alpha, momentum=beta1)
+    return optimizer
