@@ -7,33 +7,23 @@ import tensorflow as tf
 
 def create_batch_norm_layer(prev, n, activation):
     """
-    Creates a batch normalization layer for a neural network in TensorFlow.
-    Args:
-        prev: The activated output of the previous layer.
-        n: The number of nodes in the layer to be created.
-        activation: The activation function to be used on the output.  
-    Returns:
-        A tensor of the activated output for the layer.
+    Creates a batch normalization layer for a neural network.
     """
-    # 1. Initialize the Base Dense Layer
-    # We set use_bias=False because Batch Norm's 'beta' parameter
-    # effectively handles the bias/offset.
+    # Use the specific initializer requested
     init = tf.keras.initializers.VarianceScaling(mode='fan_avg')
-    dense_layer = tf.keras.layers.Dense(
-        units=n,
-        kernel_initializer=init,
-        use_bias=False
-    )
-    # Calculate the linear output: z = Wx
-    z = dense_layer(prev)
-    # 2. Setup the Batch Normalization Layer
-    # gamma (scale) initialized to 1s, beta (offset) initialized to 0s
-    batch_norm = tf.keras.layers.BatchNormalization(
-        beta_initializer='zeros',
-        gamma_initializer='ones',
+    # Create the Dense layer (remember use_bias=False as BN has beta)
+    dense = tf.keras.layers.Dense(units=n, kernel_initializer=init,
+                                  use_bias=False)
+    z = dense(prev)
+    # Create Gamma and Beta initializers as requested
+    gamma_init = tf.keras.initializers.Constant(1)
+    beta_init = tf.keras.initializers.Constant(0)
+    # Setup Batch Normalization
+    # Note: Ensure epsilon is exactly 1e-7 as requested
+    bn = tf.keras.layers.BatchNormalization(
+        gamma_initializer=gamma_init,
+        beta_initializer=beta_init,
         epsilon=1e-7
     )
-    # Normalize the linear output
-    z_norm = batch_norm(z)
-    # 3. Apply the Activation Function
-    return activation(z_norm)
+    # Apply normalization and then activation
+    return activation(bn(z))
