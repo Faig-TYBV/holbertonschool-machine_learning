@@ -17,9 +17,10 @@ def l2_reg_cost(cost, model):
         A tensor containing the total cost accounting for L2 regularization
     """
 
-    # Sum all regularization losses present in the model
-    # tf.add_n performs element-wise addition of a list of tensors
-    l2_costs = tf.add_n(model.losses)
-    # Adding the scalar l2_costs to the cost tensor will broadcast
-    # the addition across each element in the cost tensor.
-    return cost + l2_costs
+    # model.losses is a list containing the regularization loss for each layer.
+    # tf.add_n sums these individual layer penalties into a
+    # single scalar tensor.
+    l2_penalties = tf.add_n(model.losses)
+    # By adding the scalar l2_penalties to the 'cost' tensor,
+    # TensorFlow adds that scalar to every element in 'cost'.
+    return cost + l2_penalties
