@@ -25,8 +25,7 @@ def l2_reg_create_layer(prev, n, activation, lambtha):
     # Initialize weights using He normal initialization (common practice
     #  for deep networks)
     initializer = tf.keras.initializers.VarianceScaling(scale=2.0,
-                                                        mode='fan_avg',
-                                                        distribution='uniform')
+                                                        mode='fan_avg')
     # Create the Dense layer
     layer = tf.keras.layers.Dense(
         units=n,
