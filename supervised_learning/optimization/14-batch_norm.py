@@ -7,23 +7,21 @@ import tensorflow as tf
 
 def create_batch_norm_layer(prev, n, activation):
     """
-    Creates a batch normalization layer for a neural network.
+    Creates a batch normalization layer for a neural network in TensorFlow.
+    Args:
+        prev:       tensor - activated output of the previous layer
+        n:          int - number of nodes in the layer
+        activation: activation function for the output of the layer
+    Returns:
+        tensor - activated output of the batch normalized layer
     """
-    # 1. Initialize the Base Dense Layer
-    # Use VarianceScaling with fan_avg as requested
-    init = tf.keras.initializers.VarianceScaling(mode='fan_avg')
-    dense = tf.keras.layers.Dense(units=n, kernel_initializer=init)
-    # Calculate the linear output: z = Wx + b
-    z = dense(prev)
-    # 2. Setup the Batch Normalization Layer
-    # Use Constant initializers for gamma (1) and beta (0)
-    # Use epsilon of 1e-7 exactly
-    batch_norm = tf.keras.layers.BatchNormalization(
-        gamma_initializer=tf.keras.initializers.Constant(1),
-        beta_initializer=tf.keras.initializers.Constant(0),
-        epsilon=1e-7
-    )
-    # Normalize the linear output
-    z_norm = batch_norm(z)
-    # 3. Apply the activation function
-    return activation(z_norm)
+
+    initializer = tf.keras.initializers.VarianceScaling(mode='fan_avg')
+    layer = tf.keras.layers.Dense(units=n, kernel_initializer=initializer)
+    Z = layer(prev)
+    gamma = tf.Variable(tf.ones([n]), trainable=True, name='gamma')
+    beta = tf.Variable(tf.zeros([n]), trainable=True, name='beta')
+    mean, variance = tf.nn.moments(Z, axes=[0])
+    Z_norm = tf.nn.batch_normalization(Z, mean, variance, beta, gamma,
+                                       variance_epsilon=1e-7)
+    return activation(Z_norm)
