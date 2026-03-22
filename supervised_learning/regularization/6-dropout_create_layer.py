@@ -3,23 +3,29 @@
 """
 
 
-def early_stopping(cost, opt_cost, threshold, patience, count):
+import tensorflow as tf
+
+
+def dropout_create_layer(prev, n, activation, keep_prob, training=True):
     """
-    Determines if gradient descent should stop early.
+    Creates a layer of a neural network using dropout.
     Args:
-        cost:      float - current validation cost
-        opt_cost:  float - lowest recorded validation cost
-        threshold: float - threshold for early stopping
-        patience:  int - patience count for early stopping
-        count:     int - how long threshold has not been met
+        prev:       tensor - output of the previous layer
+        n:          int - number of nodes in the new layer
+        activation: activation function for the new layer
+        keep_prob:  float - probability that a node will be kept
+        training:   bool - whether the model is in training mode
     Returns:
-        bool - whether to stop early, and the updated count
+        tensor - output of the new layer with dropout applied
     """
 
-    if cost - opt_cost >= threshold:
-        count += 1
-    else:
-        count = 0
-    if count >= patience:
-        return True, count
-    return False, count
+    initializer = tf.keras.initializers.VarianceScaling(scale=2.0,
+                                                        mode='fan_avg')
+    layer = tf.keras.layers.Dense(
+        units=n,
+        activation=activation,
+        kernel_initializer=initializer
+    )
+    A = layer(prev)
+    A = tf.keras.layers.Dropout(rate=1 - keep_prob)(A, training=training)
+    return A
