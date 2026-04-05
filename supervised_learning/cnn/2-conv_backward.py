@@ -28,25 +28,18 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         A_prev_pad = A_prev
     dA_prev_pad = np.zeros_like(A_prev_pad)
     dW = np.zeros_like(W)
-    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)   # (1, 1, 1, c_new)
+    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
     for i in range(h_new):
         for j in range(w_new):
             hs, ws = i * sh, j * sw
-            # dZ slice:  (m, c_new)
             dz = dZ[:, i, j, :]
-            # A_prev_pad slice: (m, kh, kw, c_prev)
-            a_slice = A_prev_pad[:, hs:hs + kh, ws:ws + kw, :]
-            # dW  += A_slice^T · dz  →  (kh, kw, c_prev, c_new)
+            a_slice = A_prev_pad[:, hs:hs+kh, ws:ws+kw, :]
             dW += np.tensordot(a_slice, dz, axes=([0], [0]))
-            # dA_prev_pad slice += dz · W^T  →  (m, kh, kw, c_prev)
-            dA_prev_pad[:, hs:hs + kh, ws:ws + kw, :] += (
+            dA_prev_pad[:, hs:hs+kh, ws:ws+kw, :] += (
                 np.tensordot(dz, W, axes=([1], [3]))
             )
-    # Strip padding to recover dA_prev
-    if pad_bottom == 0 and pad_right == 0:
-        dA_prev = dA_prev_pad[:, pad_top:, pad_left:, :]
-    else:
-        dA_prev = dA_prev_pad[:,
-                              pad_top: -pad_bottom,
-                              pad_left: -pad_right, :]
+    # ── strip padding safely, avoiding the -0 pitfall ──────────────────────
+    h_end = None if pad_bottom == 0 else -pad_bottom
+    w_end = None if pad_right == 0 else -pad_right
+    dA_prev = dA_prev_pad[:, pad_top:h_end, pad_left:w_end, :]
     return dA_prev, dW, db
