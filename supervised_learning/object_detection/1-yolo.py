@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""
+YOLO v3 Object Detection
+"""
+
+import numpy as np
+from tensorflow import keras
+
+
+class Yolo:
+    """
+    Uses the YOLO v3 algorithm to perform object detection.
+
+    Attributes:
+        model       (keras.Model): Loaded Darknet Keras model.
+        class_names (list[str]):   Ordered list of class names.
+        class_t     (float):       Box-score threshold for initial filtering.
+        nms_t       (float):       IoU threshold for non-max suppression.
+        anchors     (np.ndarray):  Anchor boxes,
+                                   shape (outputs, anchor_boxes, 2).
+    """
+
+    def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
+        """
+        Initialise a Yolo detector.
+
+        Args:
+            model_path   (str):        Path to the Darknet Keras model (.h5).
+            classes_path (str):        Path to the file that lists class names
+                                       (one name per line, in index order).
+            class_t      (float):      Box score threshold used to discard
+                                       low-confidence detections.
+            nms_t        (float):      IoU threshold used during non-max
+                                       suppression to remove overlapping boxes.
+            anchors      (np.ndarray): Anchor boxes with shape
+                                       (outputs, anchor_boxes, 2) where the
+                                       last dimension is [width, height].
+        """
+        self.model = keras.models.load_model(model_path)
+
+        with open(classes_path, "r") as fh:
+            self.class_names = [
+                line.strip() for line in fh.readlines() if line.strip()
+            ]
+
+        self.class_t = class_t
+        self.nms_t = nms_t
+        self.anchors = anchors
+
+    def process_outputs(self, outputs, image_size):
+        """
+        Process raw predictions from the Darknet model for a single image.
+
+        YOLOv3 encodes bounding boxes as offsets (t_x, t_y, t_w, t_h)
+        relative to each grid cell and anchor box. This method decodes those
+        offsets into absolute pixel coordinates expressed relative to the
+        original (pre-resized) image dimensions.
+
+        Decoding equations (from the YOLOv3 paper):
+            b_x = sigmoid(t_x) + c_x
+            b_y = sigmoid(t_y) + c_y
+            b_w = p_w * exp(t_w)
+            b_h = p_h * exp(t_h)
+
+        where (c_x, c_y) is the top-left corner of the grid cell (in grid
+        units) and (p_w, p_h) is the prior anchor size (in input-image px).
+        The decoded values are then scaled to the original image size.
+
+        Args:
+            outputs (list[np.ndarray]): Raw model outputs, one array per
+                detection scale. Each array has shape:
+                (grid_h, grid_w, anchor_boxes, 5 + classes)
+                where the last axis is
+                [t_x, t_y, t_w, t_h, box_conf, *class_probs].
+            image_size (np.ndarray): Original image dimensions
+                [image_h, image_w].
+
+        Returns:
+            tuple:
+                boxes (list[np.ndarray]): Decoded boxes in original-image
+                    pixel coordinates (x1, y1, x2, y2), one array of shape
+                    (grid_h, grid_w, anchor_boxes, 4) per output scale.
+                box_confidences (list[np.ndarray]): Objectness scores after
+                    sigmoid, shape (grid_h, grid_w, anchor_boxes, 1) per
+                    scale.
+                box_class_probs (list[np.ndarray]): Per-class probabilities
+                    after sigmoid, shape
+                    (grid_h, grid_w, anchor_boxes, classes) per scale.
+        """
+        image_height, image_width = image_size
+
+        input_width = self.model.input.shape[1]
+        input_height = self.model.input.shape[2]
+
+        boxes = []
+        box_confidences = []
+        box_class_probs = []
+
+        for idx, output in enumerate(outputs):
+            grid_height, grid_width, anchor_boxes, _ = output.shape
+
+            # 1. Isolate the raw fields
+            t_xy = output[..., :2]       # (grid_h, grid_w, ab, 2)
+            t_wh = output[..., 2:4]      # (grid_h, grid_w, ab, 2)
+            t_conf = output[..., 4:5]    # (grid_h, grid_w, ab, 1)
+            t_probs = output[..., 5:]    # (grid_h, grid_w, ab, classes)
+
+            # 2. Build grid-cell offsets c_x (col index) and c_y (row index)
+            col_offsets = np.arange(grid_width)
+            row_offsets = np.arange(grid_height)
+            c_x, c_y = np.meshgrid(col_offsets, row_offsets)
+
+            # Reshape to (grid_h, grid_w, 1, 1) for broadcasting
+            c_x = c_x.reshape(grid_height, grid_width, 1, 1)
+            c_y = c_y.reshape(grid_height, grid_width, 1, 1)
+            cell_offsets = np.concatenate([c_x, c_y], axis=-1)
+
+            # 3. Decode centre coordinates (in grid units), then normalise
+            #    b_x = sigmoid(t_x) + c_x
+            #    b_y = sigmoid(t_y) + c_y
+            b_xy = self._sigmoid(t_xy) + cell_offsets
+            b_xy_norm = b_xy / np.array([grid_width, grid_height])
+
+            # 4. Decode width / height, normalised by the model input size
+            #    b_w = p_w * exp(t_w)
+            #    b_h = p_h * exp(t_h)
+            anchors_for_output = self.anchors[idx]
+            b_wh = (
+                anchors_for_output * np.exp(t_wh)
+            ) / np.array([input_width, input_height])
+
+            # 5. Convert (centre_x, centre_y, w, h) -> (x1, y1, x2, y2)
+            box_xy1 = b_xy_norm - b_wh / 2    # top-left corner
+            box_xy2 = b_xy_norm + b_wh / 2    # bottom-right corner
+
+            # 6. Scale to original image pixel coordinates
+            box_xy1 *= np.array([image_width, image_height])
+            box_xy2 *= np.array([image_width, image_height])
+
+            decoded_boxes = np.concatenate([box_xy1, box_xy2], axis=-1)
+            boxes.append(decoded_boxes)
+
+            # 7. Sigmoid on confidence and class probabilities
+            box_confidences.append(self._sigmoid(t_conf))
+            box_class_probs.append(self._sigmoid(t_probs))
+
+        return boxes, box_confidences, box_class_probs
+
+    @staticmethod
+    def _sigmoid(x):
+        """Numerically stable element-wise sigmoid."""
+        return 1 / (1 + np.exp(-x))
