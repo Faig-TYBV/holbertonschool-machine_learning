@@ -395,9 +395,12 @@ class Yolo:
             # Record original dimensions before any transformation
             image_shapes.append(img.shape[:2])   # (height, width)
 
+            # Convert BGR (OpenCV) to RGB (Darknet model expects RGB)
+            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
             # Resize to model input size using inter-cubic interpolation
             resized = cv2.resize(
-                img,
+                img_rgb,
                 (input_w, input_h),
                 interpolation=cv2.INTER_CUBIC
             )
