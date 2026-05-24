@@ -12,7 +12,8 @@ def initialize(X, k):
         k (int): Number of clusters.
 
     Returns:
-        numpy.ndarray: Initialized centroids of shape (k, d), or None on failure.
+        numpy.ndarray: Initialized centroids of shape (k, d),
+        or None on failure.
     """
     if not isinstance(X, np.ndarray) or X.ndim != 2:
         return None
@@ -35,9 +36,9 @@ def kmeans(X, k, iterations=1000):
         to perform.
 
     Returns:
-        tuple: (C, clss) where C is a numpy.ndarray of 
+        tuple: (C, clss) where C is a numpy.ndarray of
         shape (k, d) containing
-               the centroid means and clss is a numpy.ndarray 
+               the centroid means and clss is a numpy.ndarray
                of shape (n,)
                containing the cluster index for each data point,
                or (None, None) on failure.
@@ -58,13 +59,13 @@ def kmeans(X, k, iterations=1000):
     clss = None
 
     for _ in range(iterations):
-        # Assign each point to nearest centroid: (n, k) 
+        # Assign each point to nearest centroid: (n, k)
         # distance matrix
         diffs = X[:, np.newaxis, :] - C[np.newaxis, :, :]
         dists = np.linalg.norm(diffs, axis=2)
         clss_new = np.argmin(dists, axis=1)
 
-        # Converged when assignments (and thus centroids) 
+        # Converged when assignments (and thus centroids)
         # no longer change
         if clss is not None and np.array_equal(clss_new, clss):
             return C, clss
