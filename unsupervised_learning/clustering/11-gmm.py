@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+"""Module for calculating a GMM from a dataset using sklearn."""
+
+import sklearn.mixture
+
+
+def gmm(X, k):
+    """Calculate a Gaussian Mixture Model from a dataset.
+
+    Args:
+        X (numpy.ndarray): Dataset of shape (n, d).
+        k (int): Number of clusters.
+
+    Returns:
+        tuple: (pi, m, S, clss, bic) where pi is a numpy.ndarray of shape
+               (k,) containing the cluster priors, m is a numpy.ndarray of
+               shape (k, d) containing the centroid means, S is a
+               numpy.ndarray of shape (k, d, d) containing the covariance
+               matrices, clss is a numpy.ndarray of shape (n,) containing
+               the cluster indices, and bic is the BIC value for the model.
+    """
+    model = sklearn.mixture.GaussianMixture(n_components=k)
+    model.fit(X)
+
+    pi = model.weights_
+    m = model.means_
+    S = model.covariances_
+    clss = model.predict(X)
+    bic = model.bic(X)
+
+    return pi, m, S, clss, bic
