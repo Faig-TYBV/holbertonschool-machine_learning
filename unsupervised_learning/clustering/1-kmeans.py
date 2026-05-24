@@ -1,90 +1,56 @@
 #!/usr/bin/env python3
-"""Module for performing K-means clustering on a dataset."""
+"""
+Performs K-means clustering
+"""
 
 import numpy as np
 
-
-def initialize(X, k):
-    """Initialize cluster centroids using a multivariate uniform distribution.
-
-    Args:
-        X (numpy.ndarray): Dataset of shape (n, d).
-        k (int): Number of clusters.
-
-    Returns:
-        numpy.ndarray: Initialized centroids of shape (k, d),
-        or None on failure.
-    """
-    if not isinstance(X, np.ndarray) or X.ndim != 2:
-        return None
-    if not isinstance(k, int) or k <= 0 or k > X.shape[0]:
-        return None
-
-    low = X.min(axis=0)
-    high = X.max(axis=0)
-
-    return np.random.uniform(low=low, high=high, size=(k, X.shape[1]))
+initialize = __import__('0-initialize').initialize
 
 
 def kmeans(X, k, iterations=1000):
-    """Perform K-means clustering on a dataset.
+    """
+    Performs K-means on a dataset.
 
     Args:
-        X (numpy.ndarray): Dataset of shape (n, d).
-        k (int): Number of clusters.
-        iterations (int): Maximum number of iterations
-        to perform.
+        X: numpy.ndarray of shape (n, d) containing the dataset
+        k: positive integer containing the number of clusters
+        iterations: positive integer containing the maximum number of iterations
 
     Returns:
-        tuple: (C, clss) where C is a numpy.ndarray of
-        shape (k, d) containing
-               the centroid means and clss is a numpy.ndarray
-               of shape (n,)
-               containing the cluster index for each data point,
-               or (None, None) on failure.
+        C, clss, or None, None on failure
     """
-    if not isinstance(X, np.ndarray) or X.ndim != 2:
+
+    if type(X) is not np.ndarray or len(X.shape) != 2:
         return None, None
-    if not isinstance(k, int) or k <= 0 or k > X.shape[0]:
+
+    if type(k) is not int or k <= 0:
         return None, None
-    if not isinstance(iterations, int) or iterations <= 0:
+
+    if type(iterations) is not int or iterations <= 0:
         return None, None
 
     C = initialize(X, k)
+
     if C is None:
         return None, None
 
-    low = X.min(axis=0)
-    high = X.max(axis=0)
-    clss = None
-
     for _ in range(iterations):
-        # Assign each point to nearest centroid: (n, k)
-        # distance matrix
-        diffs = X[:, np.newaxis, :] - C[np.newaxis, :, :]
-        dists = np.linalg.norm(diffs, axis=2)
-        clss_new = np.argmin(dists, axis=1)
+        C_prev = np.copy(C)
 
-        # Converged when assignments (and thus centroids)
-        # no longer change
-        if clss is not None and np.array_equal(clss_new, clss):
-            return C, clss
+        distances = np.linalg.norm(X[:, np.newaxis] - C, axis=2)
+        clss = np.argmin(distances, axis=1)
 
-        clss = clss_new
-
-        # Update centroids; reinitialize any empty cluster
-        C_new = np.zeros_like(C)
         for j in range(k):
-            mask = clss == j
-            if not mask.any():
-                C_new[j] = np.random.uniform(low=low, high=high)
+            if X[clss == j].shape[0] == 0:
+                C[j] = initialize(X, 1)[0]
             else:
-                C_new[j] = X[mask].mean(axis=0)
+                C[j] = np.mean(X[clss == j], axis=0)
 
-        C = C_new
+        if np.array_equal(C, C_prev):
+            break
 
-    clss = np.argmin(
-        np.linalg.norm(X[:, np.newaxis, :] - C[np.newaxis, :, :],
-                       axis=2), axis=1
-    )
+    distances = np.linalg.norm(X[:, np.newaxis] - C, axis=2)
+    clss = np.argmin(distances, axis=1)
+
     return C, clss
