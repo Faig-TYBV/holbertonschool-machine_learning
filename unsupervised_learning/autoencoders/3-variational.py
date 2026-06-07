@@ -6,7 +6,8 @@ import tensorflow.keras as keras
 def autoencoder(input_dims, hidden_layers, latent_dims):
     """
     ARGS:
-        -input_dims {integer}: containing the dimensions of the model input
+        -input_dims {integer}: containing the dimensions 
+        of the model input
         -hidden_layers {list}: containing the number of nodes
             for each hidden layer in the encoder, respectively
         -latent_dims {integer}: containing the dimensions
@@ -60,12 +61,15 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     decoder = keras.Model(inputs=input_decoder, outputs=decode)
 
     # ── Full VAE ──────────────────────────────────────────────────────────────
-    # FIX 1: encoder returns [z, z_mean, z_log_sigma]; pass only z ([0]) to decoder
+    # FIX 1: encoder returns [z, z_mean, z_log_sigma]; pass only z ([0])
+    #  to decoder
     outputs = decoder(encoder(input_encoder)[0])
 
-    # FIX 2: define loss AFTER outputs, and use the true/pred args Keras provides
+    # FIX 2: define loss AFTER outputs, and use the true/pred args 
+    # Keras provides
     def loss(true, pred):
-        reconstruction_loss = keras.losses.binary_crossentropy(true, pred)
+        reconstruction_loss = keras.losses.binary_crossentropy(true,
+                                                               pred)
         reconstruction_loss *= input_dims
         kl_loss = (1 + z_log_sigma
                    - keras.backend.square(z_mean)
