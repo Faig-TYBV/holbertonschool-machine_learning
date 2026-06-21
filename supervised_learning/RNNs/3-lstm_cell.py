@@ -24,7 +24,6 @@ class LSTMCell:
         self.Wu = np.random.normal(size=(h + i, h))
         self.Wc = np.random.normal(size=(h + i, h))
         self.Wo = np.random.normal(size=(h + i, h))
-        
         # Weight matrix for the output
         self.Wy = np.random.normal(size=(h, o))
 
