@@ -35,7 +35,6 @@ def deep_rnn(rnn_cells, X, h_0):
     # Loop through each time step
     for step in range(t):
         x_in = X[step]
-        
         # Array to hold the new hidden states for this time step
         h_next_t = np.zeros_like(h_0)
 
@@ -43,10 +42,8 @@ def deep_rnn(rnn_cells, X, h_0):
         for layer in range(l):
             # Forward pass for the current layer
             h_next, y_step = rnn_cells[layer].forward(h_prev_t[layer], x_in)
-            
             # Store the new hidden state for this layer
             h_next_t[layer] = h_next
-            
             # The output hidden state becomes the input data for the next layer
             x_in = h_next
 
@@ -56,7 +53,6 @@ def deep_rnn(rnn_cells, X, h_0):
 
         # Append the states of all layers for this time step to H
         H.append(h_next_t)
-        
         # Update the previous hidden states for the next time step iteration
         h_prev_t = np.copy(h_next_t)
 
