@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-'''This module contains the RNNCell class, which represents a single cell of a simple RNN.'''
+'''This module contains the RNNCell class,
+which represents a single cell of a simple RNN.'''
 
 
 import numpy as np
