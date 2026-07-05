@@ -18,14 +18,13 @@ def bag_of_words(sentences, vocab=None):
     Returns:
         tuple:
             numpy.ndarray: Embeddings matrix of shape (s, f).
-            list: The features used for the embeddings.
+            numpy.ndarray: The features used for the embeddings.
     """
     extracted_sentences = []
     for sentence in sentences:
         # Lowercase and replace non-alphanumeric characters with spaces
         clean_sentence = re.sub(r'[^a-z0-9]', ' ', sentence.lower())
-        # Split into words and keep only those with length > 1 
-        # (matches standard CountVectorizer behavior dropping 's', 'a', etc.)
+        # Split into words and keep only those with length > 1
         words = [w for w in clean_sentence.split() if len(w) > 1]
         extracted_sentences.append(words)
 
@@ -50,4 +49,4 @@ def bag_of_words(sentences, vocab=None):
             if word in feature_dict:
                 embeddings[i, feature_dict[word]] += 1
 
-    return embeddings, features
+    return embeddings, np.array(features)
