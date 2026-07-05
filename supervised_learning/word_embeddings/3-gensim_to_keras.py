@@ -2,7 +2,7 @@
 """
 Module to convert a trained Gensim Word2Vec model into a Keras Embedding layer.
 """
-import keras
+import tensorflow as tf
 
 
 def gensim_to_keras(model):
@@ -13,7 +13,7 @@ def gensim_to_keras(model):
         model (gensim.models.Word2Vec): A trained gensim word2vec model.
 
     Returns:
-        keras.layers.Embedding: A trainable Keras Embedding layer initialized
+        tf.keras.layers.Embedding: A trainable Keras Embedding layer initialized
         with the word vectors from the Gensim model.
     """
     # Extract the actual word vectors (numpy array) from the Gensim model
@@ -24,7 +24,7 @@ def gensim_to_keras(model):
     vocab_size, vector_size = embedding_matrix.shape
 
     # Initialize the Keras Embedding layer with the extracted weights
-    embedding_layer = keras.layers.Embedding(
+    embedding_layer = tf.keras.layers.Embedding(
         input_dim=vocab_size,
         output_dim=vector_size,
         weights=[embedding_matrix],
