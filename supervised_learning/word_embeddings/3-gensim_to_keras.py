@@ -16,19 +16,16 @@ def gensim_to_keras(model):
         tf.keras.layers.Embedding: A trainable Keras Embedding layer initialized
         with the word vectors from the Gensim model.
     """
-    # Extract the actual word vectors (numpy array) from the Gensim model
-    keyed_vectors = model.wv
-    embedding_matrix = keyed_vectors.vectors
+    # Extract the exact word vectors (numpy array) from the model
+    embedding_matrix = model.wv.vectors
     
-    # Determine vocabulary size (input_dim) and vector size (output_dim)
+    # Determine vocabulary size and vector size directly from the matrix
     vocab_size, vector_size = embedding_matrix.shape
 
-    # Initialize the Keras Embedding layer with the extracted weights
-    embedding_layer = tf.keras.layers.Embedding(
+    # Return the initialized Embedding layer
+    return tf.keras.layers.Embedding(
         input_dim=vocab_size,
         output_dim=vector_size,
         weights=[embedding_matrix],
         trainable=True
     )
-
-    return embedding_layer
