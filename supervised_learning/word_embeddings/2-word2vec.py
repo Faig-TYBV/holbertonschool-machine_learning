@@ -26,18 +26,31 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     """
     sg_mode = 0 if cbow else 1
 
-    # In Gensim, instantiating the model with sentences automatically 
-    # builds the vocabulary and trains it in one go.
-    model = gensim.models.Word2Vec(
-        sentences=sentences,
-        vector_size=vector_size,
-        min_count=min_count,
-        window=window,
-        negative=negative,
-        sg=sg_mode,
-        epochs=epochs,
-        seed=seed,
-        workers=workers
-    )
+    # Dynamically handle parameter names based on the Gensim version 
+    # to prevent variables from being silently ignored in older environments.
+    if int(gensim.__version__[0]) >= 4:
+        model = gensim.models.Word2Vec(
+            sentences=sentences,
+            vector_size=vector_size,
+            min_count=min_count,
+            window=window,
+            negative=negative,
+            sg=sg_mode,
+            epochs=epochs,
+            seed=seed,
+            workers=workers
+        )
+    else:
+        model = gensim.models.Word2Vec(
+            sentences=sentences,
+            size=vector_size,
+            min_count=min_count,
+            window=window,
+            negative=negative,
+            sg=sg_mode,
+            iter=epochs,
+            seed=seed,
+            workers=workers
+        )
 
     return model
