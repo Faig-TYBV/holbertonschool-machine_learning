@@ -3,9 +3,10 @@
 Module for creating, building, and training a FastText model using Gensim.
 """
 
-from gensim.models import FastText
+import gensim
 
-def fasttext_model(sentences, vector_size=100, min_count=5, negative=5, window=5, cbow=True, epochs=5, seed=0, workers=1):
+def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
+                   window=5, cbow=True, epochs=5, seed=0, workers=1):
     """
     Creates, builds, and trains a Gensim fastText model.
     
@@ -29,7 +30,7 @@ def fasttext_model(sentences, vector_size=100, min_count=5, negative=5, window=5
     
     # Initialize, build vocabulary, and train the model 
     # (Passing 'sentences' directly handles building and training automatically)
-    model = FastText(
+    model = gensim.models.FastText(
         sentences=sentences,
         vector_size=vector_size,
         min_count=min_count,
