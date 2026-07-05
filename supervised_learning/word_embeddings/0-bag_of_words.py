@@ -1,35 +1,51 @@
 #!/usr/bin/env python3
 """
-Defines function that creates a bag of words embedding matrix
+Module that contains the bag_of_words function for NLP feature extraction.
 """
-
-
-from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
+import re
 
 
 def bag_of_words(sentences, vocab=None):
     """
-    Creates a bag of words embedding matrix
+    Creates a bag of words embedding matrix.
 
-    parameters:
-        sentences [list]:
-            list of sentences to analyze
+    Args:
+        sentences (list): A list of sentences to analyze.
+        vocab (list): A list of vocabulary words to use. If None,
+            all unique words within sentences will be used.
 
-        vocab [list]:
-            list of vocabulary words to use for analysis
-            if None, all words within sentences should be used
-
-    returns:
-        embeddings,features:
-            embeddings [numpy.ndarray of shape (s, f)]:
-                contains the embeddings
-                s: number of sentences in sentences
-                f: number of features analyzed
-            features [list]:
-                list of features used for embeddings
+    Returns:
+        tuple:
+            numpy.ndarray: Embeddings matrix of shape (s, f).
+            list: The features used for the embeddings.
     """
-    vectorizer = CountVectorizer(vocabulary=vocab)
-    X_train_counts = vectorizer.fit_transform(sentences)
-    embeddings = X_train_counts.toarray()
-    features = vectorizer.get_feature_names()
+    extracted_sentences = []
+    for sentence in sentences:
+        # Lowercase and replace non-alphanumeric characters with spaces
+        clean_sentence = re.sub(r'[^a-z0-9]', ' ', sentence.lower())
+        extracted_sentences.append(clean_sentence.split())
+
+    if vocab is None:
+        # Extract unique words and sort alphabetically
+        features_set = set()
+        for words in extracted_sentences:
+            for word in words:
+                features_set.add(word)
+        features = sorted(list(features_set))
+    else:
+        features = vocab
+
+    s = len(sentences)
+    f = len(features)
+    embeddings = np.zeros((s, f), dtype=int)
+
+    # Dictionary for faster O(1) feature index lookup
+    feature_dict = {feature: idx for idx, feature in enumerate(features)}
+
+    for i, words in enumerate(extracted_sentences):
+        for word in words:
+            if word in feature_dict:
+                embeddings[i, feature_dict[word]] += 1
+
     return embeddings, features
