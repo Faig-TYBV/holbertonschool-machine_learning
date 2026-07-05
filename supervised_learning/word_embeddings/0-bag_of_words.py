@@ -24,17 +24,19 @@ def bag_of_words(sentences, vocab=None):
     for sentence in sentences:
         # Lowercase and replace non-alphanumeric characters with spaces
         clean_sentence = re.sub(r'[^a-z0-9]', ' ', sentence.lower())
-        extracted_sentences.append(clean_sentence.split())
+        # Split into words and keep only those with length > 1 
+        # (matches standard CountVectorizer behavior dropping 's', 'a', etc.)
+        words = [w for w in clean_sentence.split() if len(w) > 1]
+        extracted_sentences.append(words)
 
     if vocab is None:
         # Extract unique words and sort alphabetically
         features_set = set()
         for words in extracted_sentences:
-            for word in words:
-                features_set.add(word)
+            features_set.update(words)
         features = sorted(list(features_set))
     else:
-        features = vocab
+        features = list(vocab)
 
     s = len(sentences)
     f = len(features)
