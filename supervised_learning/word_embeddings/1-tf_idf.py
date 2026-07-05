@@ -8,27 +8,21 @@ import re
 
 def tf_idf(sentences, vocab=None):
     """
-    Creates a TF-IDF embedding matrix.
+    Creates a TF-IDF embedding matrix with L2 normalization.
 
     Args:
         sentences (list): A list of sentences to analyze.
-        vocab (list): A list of vocabulary words to use. If None,
-            all unique words within sentences will be used.
+        vocab (list): A list of vocabulary words to use.
 
     Returns:
-        tuple:
-            numpy.ndarray: TF-IDF embeddings matrix of shape (s, f).
-            numpy.ndarray: The features used for the embeddings.
+        tuple: (embeddings, features)
     """
     extracted_sentences = []
-    
-    # 1. Preprocess sentences (matching bag_of_words logic)
     for sentence in sentences:
         clean_sentence = re.sub(r'[^a-z0-9]', ' ', sentence.lower())
         words = [w for w in clean_sentence.split() if len(w) > 1]
         extracted_sentences.append(words)
 
-    # 2. Build Vocabulary (Features)
     if vocab is None:
         features_set = set()
         for words in extracted_sentences:
@@ -40,16 +34,15 @@ def tf_idf(sentences, vocab=None):
     s = len(sentences)
     f = len(features)
     embeddings = np.zeros((s, f), dtype=float)
-
     feature_dict = {feature: idx for idx, feature in enumerate(features)}
 
-    # 3. Calculate Term Frequency (TF - raw count)
+    # TF: Raw counts
     for i, words in enumerate(extracted_sentences):
         for word in words:
             if word in feature_dict:
                 embeddings[i, feature_dict[word]] += 1
 
-    # 4. Calculate Document Frequency (DF)
+    # Smooth IDF: log((1 + N) / (1 + df)) + 1
     df = np.zeros(f, dtype=int)
     for words in extracted_sentences:
         unique_words = set(words)
@@ -57,17 +50,13 @@ def tf_idf(sentences, vocab=None):
             if word in feature_dict:
                 df[feature_dict[word]] += 1
 
-    # 5. Calculate Inverse Document Frequency (IDF)
-    # Using standard formula: log(N / df)
-    idf = np.zeros(f, dtype=float)
-    for i in range(f):
-        if df[i] > 0:
-            idf[i] = np.log(s / df[i])
-        else:
-            idf[i] = 0.0  # Fallback if a provided vocab word is never used
+    idf = np.log((1 + s) / (1 + df)) + 1
+    embeddings = embeddings * idf
 
-    # 6. Compute TF-IDF
-    for i in range(s):
-        embeddings[i, :] = embeddings[i, :] * idf
+    # L2 Normalization: row / sqrt(sum(row^2))
+    norm = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    # Avoid division by zero
+    embeddings = np.divide(embeddings, norm, out=np.zeros_like(embeddings),
+                           where=norm != 0)
 
     return embeddings, np.array(features)
