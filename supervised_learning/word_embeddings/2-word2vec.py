@@ -2,7 +2,7 @@
 """
 Module for creating, building, and training a Word2Vec model using Gensim.
 """
-from gensim.models import Word2Vec
+import gensim
 
 
 def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
@@ -16,18 +16,18 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
         min_count (int): Minimum frequency count of a word to be included.
         window (int): Maximum distance between current and predicted word.
         negative (int): Number of negative samples to use.
-        cbow (bool): Determines training type (True for CBOW, False for Skip-gram).
+        cbow (bool): Determines training type (True for CBOW, False for Skip).
         epochs (int): Number of iterations over the corpus.
         seed (int): Seed for the random number generator.
         workers (int): Number of worker threads to train the model.
 
     Returns:
-        Word2Vec: The trained Gensim Word2Vec model.
+        gensim.models.Word2Vec: The trained Gensim Word2Vec model.
     """
     # Gensim uses parameter 'sg' where 0 = CBOW and 1 = Skip-gram
     sg_mode = 0 if cbow else 1
 
-    model = Word2Vec(
+    model = gensim.models.Word2Vec(
         sentences=sentences,
         vector_size=vector_size,
         min_count=min_count,
