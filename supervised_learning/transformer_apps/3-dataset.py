@@ -35,7 +35,7 @@ class Dataset:
 
         def filter_max_len(pt, en):
             return tf.logical_and(tf.size(pt) <= max_len,
-                    tf.size(en) <= max_len)
+                                  tf.size(en) <= max_len)
 
         self.data_train = self.data_train.filter(filter_max_len)
         self.data_train = self.data_train.cache()
