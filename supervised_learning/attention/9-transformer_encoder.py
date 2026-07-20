@@ -58,7 +58,6 @@ class Encoder(tf.keras.layers.Layer):
         # Slice the positional encoding for the sequence length and cast
         pos_encoding = self.positional_encoding[:seq_len, :]
         pos_encoding = tf.cast(pos_encoding, dtype=tf.float32)
-        
         # Expand dimensions to broadcast over the batch size
         pos_encoding = tf.expand_dims(pos_encoding, axis=0)
 
