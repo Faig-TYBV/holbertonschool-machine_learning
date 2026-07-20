@@ -68,17 +68,16 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         v = self.Wv(V)  # (batch_size, seq_len_v, dm)
 
         # Split heads
-        q = self.split_heads(q, batch_size)  # (batch_size, h, seq_len_q, depth)
-        k = self.split_heads(k, batch_size)  # (batch_size, h, seq_len_v, depth)
-        v = self.split_heads(v, batch_size)  # (batch_size, h, seq_len_v, depth)
+        q = self.split_heads(q, batch_size)
+        k = self.split_heads(k, batch_size)
+        v = self.split_heads(v, batch_size)
 
         # Calculate scaled dot product attention
         scaled_attention, attention_weights = sdp_attention(q, k, v, mask)
 
-        # Transpose and reshape scaled attention back to original sequence format
+        # Transpose and reshape scaled attention
         # (batch_size, seq_len_q, h, depth)
         scaled_attention = tf.transpose(scaled_attention, perm=[0, 2, 1, 3])
-        
         # (batch_size, seq_len_q, dm)
         concat_attention = tf.reshape(scaled_attention,
                                       (batch_size, -1, self.dm))
