@@ -41,7 +41,8 @@ class Decoder(tf.keras.layers.Layer):
             x (tf.Tensor): A tensor of shape (batch, target_seq_len)
                 containing the input to the decoder.
             encoder_output (tf.Tensor): A tensor of shape
-                (batch, input_seq_len, dm) containing the output of the encoder.
+                (batch, input_seq_len, dm) containing the output
+                of the encoder.
             training (bool): A boolean to determine if the model is training.
             look_ahead_mask (tf.Tensor): The mask to be applied to the
                 first multi head attention layer.
