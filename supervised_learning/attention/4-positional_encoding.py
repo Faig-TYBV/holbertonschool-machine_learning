@@ -16,10 +16,10 @@ def positional_encoding(max_seq_len, dm):
             containing the positional encoding vectors.
     """
     P = np.arange(max_seq_len)[:, np.newaxis]
-    I = np.arange(dm)[np.newaxis, :]
+    Q = np.arange(dm)[np.newaxis, :]
 
     # Calculate the continuous angles for all positions and dimensions
-    angles = P / (10000 ** ((2 * (I // 2)) / dm))
+    angles = P / (10000 ** ((2 * (Q // 2)) / dm))
 
     # Apply sin to even indices and cos to odd indices
     PE = np.zeros((max_seq_len, dm))
