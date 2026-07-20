@@ -20,7 +20,8 @@ def sdp_attention(Q, K, V, mask=None):
     Returns:
         tuple: (output, weights)
             output: A tensor with its last two dimensions as
-                (..., seq_len_q, dv) containing the scaled dot product attention.
+                (..., seq_len_q, dv) containing the scaled dot
+                product attention.
             weights: A tensor with its last two dimensions as
                 (..., seq_len_q, seq_len_v) containing the attention weights.
     """
