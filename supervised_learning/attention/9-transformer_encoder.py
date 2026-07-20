@@ -52,6 +52,9 @@ class Encoder(tf.keras.layers.Layer):
         # Convert input word indices to embeddings
         x = self.embedding(x)  # (batch, input_seq_len, dm)
 
+        # Scale the embeddings by multiplying by the square root of dm
+        x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
+
         # Slice the positional encoding for the sequence length and cast
         pos_encoding = self.positional_encoding[:seq_len, :]
         pos_encoding = tf.cast(pos_encoding, dtype=tf.float32)
@@ -59,7 +62,7 @@ class Encoder(tf.keras.layers.Layer):
         # Expand dimensions to broadcast over the batch size
         pos_encoding = tf.expand_dims(pos_encoding, axis=0)
 
-        # Add positional encoding to the embeddings
+        # Add positional encoding to the scaled embeddings
         x += pos_encoding
 
         # Apply dropout
