@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Module containing a function to initialize a Q-table for reinforcement learning.
+Module containing a function to initialize a Q-table for
+reinforcement learning.
 """
 import numpy as np
 
