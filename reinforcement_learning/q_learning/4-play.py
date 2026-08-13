@@ -21,26 +21,27 @@ def play(env, Q, max_steps=100):
       state at each step.
     """
     state, _ = env.reset()
-    
+
     rendered_outputs = []
     # Render initial state
     rendered_outputs.append(env.render())
-    
+
     total_rewards = 0.0
 
     for _ in range(max_steps):
-        # Always exploit: pick the action with the maximum Q-value for the state
+        # Always exploit: pick the action with the maximum Q-value
+        # for the state
         action = np.argmax(Q[state, :])
-        
+
         # Take the action
         state, reward, terminated, truncated, _ = env.step(action)
-        
+
         # Accumulate reward
         total_rewards += reward
-        
+
         # Render the board state and append it to the list
         rendered_outputs.append(env.render())
-        
+
         # Check if the episode is finished
         if terminated or truncated:
             break
