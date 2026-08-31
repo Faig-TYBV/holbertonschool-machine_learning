@@ -13,7 +13,7 @@ def policy(matrix, weight):
     Args:
         matrix (numpy.ndarray): The state matrix.
         weight (numpy.ndarray): The weights matrix.
-  
+
     Returns:
         numpy.ndarray: The computed policy probabilities.
     """
@@ -24,14 +24,14 @@ def policy(matrix, weight):
 
 def policy_gradient(state, weight):
     """
-    Computes the Monte-Carlo policy gradient based on a state and 
+    Computes the Monte-Carlo policy gradient based on a state and
     a weight matrix.
 
     Args:
         state (numpy.ndarray): Matrix representing the current observation
             of the environment. (1D or 2D array)
         weight (numpy.ndarray): Matrix of random weights.
- 
+
     Returns:
         tuple: (action, gradient)
             - action (int): The selected action based on the policy.
