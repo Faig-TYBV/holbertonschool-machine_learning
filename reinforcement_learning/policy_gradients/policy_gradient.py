@@ -13,7 +13,7 @@ def policy(matrix, weight):
     Args:
         matrix (numpy.ndarray): The state matrix (e.g., shape (1, 4)).
         weight (numpy.ndarray): The weights matrix (e.g., shape (4, 2)).
- 
+
     Returns:
         numpy.ndarray: The computed policy probabilities.
     """
